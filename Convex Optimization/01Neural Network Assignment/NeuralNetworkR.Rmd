@@ -1,0 +1,86 @@
+---
+title: "Neural Network in R"
+author: "Saul Garcia"
+date: "October 21, 2015"
+output: pdf_document
+---
+#Neural Network in R
+
+#Summary
+The objective of this project is to learn how to do a Neural Network. The objective is to generate a random dataset with the datagenerator file provided in the course, and with this dataset, build a supervised learning Neural Network that takes 4 variables as an input and predicts the output we are given. In this scenario, with the help of the Neuralnet package, it was possible to build this Neural Network which is able to predict with an accuracy of 100% and a confidence interval of 95%.
+
+##Loading the packages
+```{r}
+library("neuralnet")
+library("caret")
+set.seed(1234)
+
+#Set working directory
+setwd("/Users/saulgarcia/Dropbox/Maestría/DMKM/Courses/SEM1/Optimization/Laboratory/NeuralNetworkR")
+```
+
+##Import and Clean the Data
+The data generated is imported, and cleaned by removing some columns that are not useful for the problem, in order to end up with just our Input (X1,X2,X3,X4) and Output (Y). To do this, we are utilizing the split datasets "data.x" and "data_y" that were obtained by the code given in class.
+
+The data is a [99x5] data frame which means: 99 observations for 4 Inputs and 1 Output. In order to fulfill our objective in this project, the 80% of our data will be used as training and 20% as testing.
+```{r}
+#Input
+X <- read.csv("data_x.txt",sep = " ")[ ,2:5]
+names(X)<- c("X1","X2","X3","X4")
+#Output
+Y = read.csv("data_y.txt",sep = " ")[,2]
+
+#Bind in one dataframe
+data = cbind(X,Y)
+head(data)
+
+```
+
+##Neural Network Procedure
+The previous dataset will be run through the neural network function obtained from the NeuralNet library. The neural network is going utilize an Error Back Propagation method, a supervised learning method, where it is taking the first four columns of the dataset as an input, and by using a sigmoidal function, it will iterate by utilizing a gradient descent. This means our model has to be differentiable. The model will utilize our known Output (Y column), in order to optimize and build the most accurate model of prediction, acording to our data.
+
+As previously said, our neural network will be run with the last 79 observations, in order to use the first 20 observations to test. Since this data was generated randomly, it is basically the same if for this scenario the data partition is not randomized.
+```{r}
+#Train the neural network
+#Going to have 2 hidden layers
+#Threshold is a numeric value specifying the threshold for the partial derivatives of the error function as stopping criteria.
+  net.sqrt <- neuralnet(Y~X1+X2+X3+X4,data[21:99,], hidden=2, threshold=0.05)
+  net.sqrt$result.matrix
+```
+This is giving us the number of iterations taken in order to find our optimal value. Also shows us our 10 optimized weights that were found for each hidden layer. Four weights for the first hidden layer and its intercept as an input, another four for the second hidden layer, and ultimately the last two weights and an intercept to input in order to obtain our prediction. 
+```{r}
+#Plot the neural network
+  plot(net.sqrt)
+#the plot will be attatched in a different document.
+```
+##Testing
+After having our data trained, its time to proove weather our Neural Netowk has learned, and how good it did. As it was stated, for our testing, only the first 20 observations will be used for our prediction.
+```{r}
+#The code is computing our model built with the training set, with our testing set (first 20 observations)
+results <- compute(net.sqrt, X[1:20,])
+```
+
+##Results
+
+```{r}
+print(results$net.result) 
+prediction<-as.data.frame(round(results$net.result))
+```
+The result we observe are still needed to go through the threshold function, where they will be rounded in order to have only 0 or 1 as an output.
+
+After getting our predicted output values through the threshold function, we will be building a dataframe containing our Inputs, and Original or Expected Outputs, compared with our Predicted or Neural Network Outputs.
+Now our Output dataset (Y) is being transformed as a data frame, and being subset for utilizing the first 20 observations.
+```{r}
+#First we subset our desired elements from our original outputs.
+Ydf<-as.data.frame(Y[1:20])
+
+resultsdf<-cbind(X[1:20,], Ydf , prediction)
+names(resultsdf)<-c("I_X1","I_X2", "I_X3", "I_X4", "Expected Output" , "Neural Network Output")
+#Print the results dataframe
+resultsdf
+```
+With this printing we can proove that our predictions are exactly the same as our expected output values from our generated dataset, but in order to represent it graphically we have to do a Confusion Matrix.
+```{r}
+confusionMatrix(prediction$V1, Ydf$`Y[1:20]`)
+```
+As conclusion, we have developed neural network model that utilizing four real variables, predicts with a 100% of accuracy a binary output. It is safe to say that our model works, given that we obtained a 95% confidence level four our study.
