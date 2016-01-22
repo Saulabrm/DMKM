@@ -1,7 +1,7 @@
 # Convex Optimization Course
 
-This repository contains the three assignments of the Convex Optimization Course:
+This repository contains the three assignments of the Convex Optimization Course:  
 
-*Neural Networks
-*Gradient Descent Method
-*Support Vector Machine
+1. Neural Networks
+2. Gradient Descent Method
+3. Support Vector Machine
