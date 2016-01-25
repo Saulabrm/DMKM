@@ -1,0 +1,6 @@
+Current git commit:
+6ef511816590f816c180ea067c322454f9ab5b01
+
+Current ouput md5 hashes:
+MD5 (output/Salaries.csv) = 36b30e64812fad3e00775c9df36fce79
+MD5 (output/database.sqlite) = 89a60d5672049194c2bf8ccfb861c0e8

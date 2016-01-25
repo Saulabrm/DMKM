@@ -1,0 +1,83 @@
+---
+title: "Salaries"
+author: "Mr. Garcia, Mr. Kalyan"
+date: "January 22, 2016"
+output: html_document
+---
+
+##Summary
+The objective of this project is to a descriptive analyses of the San Francisco's salaries dataset in order to find if there exists links betweeen the variables of this dataset and answer different questions. It is required to explore, and clean the data in order to be able further analyse it using SPAD software.
+
+##Intro 
+In order for San Francisco to become a more transparent city, they decided to release a dataset of the Salaries of the city from the years 2010-2014. We chose this [dataset](http://transparentcalifornia.com/salaries/san-francisco/) in order to pursue our study of classification utilizing the methods "PCA, CA, MCA and FDA".
+
+Questions? Which methods we can use for each question.
+
+##Dataset
+###Loading
+```{r, message=FALSE}
+library(dplyr)
+data<-read.csv("Salaries.csv")
+```
+###Exploring
+```{r,}
+dim(data)
+```
+This dataset contains `r dim(data)[2]` variables and `r dim(data)[1]` observations. Which we know in advance that it is more than the amount we can read in SPAD. For this reason the data will be futher explore in order to determine what are the important variables for our study.
+
+###Description
+The dataset has the following variables:
+
+| Name | Class | Description |
+| ------------ | ------------ | ------------ |
+|  `r names(data)[1]` | Int | Id of the dataframe | 
+|  `r names(data)[2]` | Factor | Name of the employee |
+|  `r names(data)[3]` | Factor | Title of the job position  | 
+|  `r names(data)[4]` | Factor | Base anual salary | 
+|  `r names(data)[5]` | Factor | Total Overtime payment | 
+|  `r names(data)[6]` | Factor | Other payments | 
+|  `r names(data)[7]` | Factor | Anual extra benefits received | 
+|  `r names(data)[8]` | Numerical | Total salariy without Benefits | 
+|  `r names(data)[9]` | Numerical | Total Payment including Benefits | 
+|  `r names(data)[10]` | Int | Year (2010-2014) | 
+|  `r names(data)[11]` | Logical | Notes are Empty | 
+|  `r names(data)[12]` | Factor | Place (San Francisco for all the observations) | 
+|  `r names(data)[13]` | Factor | Status of the Employee (Full Time, Part Time) | 
+
+```{r,}
+str(data)
+summary(data)
+```
+
+First, the amount of variables: `Id, EmployeeName,Notes ,Agency` will not be useful for the analysis, so they will be removed.
+
+Second, the study will be focused only in year 2014.
+
+Third, for the variable "TotalPay Benefits" the values below cero are going to be considered as a mistake and they will be removed.
+
+Fourth, the empty values for "Status" will be removed
+
+Fifth, the variables `BasePay, Overtime Pay, Other Pay`and `Benefits` will be turned into numericals.
+
+###Preprocessing
+```{r, echo=FALSE}
+nums<- c("BasePay","OvertimePay","OtherPay","Benefits")
+stat<- c("FT","PT")
+dataclean<-data %>% 
+            select(-Id, -EmployeeName, -Notes, -Agency) %>% 
+            filter(Year==2014, TotalPayBenefits>=0, Status == stat ) #%>% 
+            #mutate_each(funs(as.numeric),nums)
+dataclean[,nums]<- lapply(dataclean[,nums], as.numeric)
+dim(dataclean)
+str(dataclean)
+summary(dataclean)
+```
+
+At this point, the dataframe was reduced to: `r dim(dataclean)[2]` variables and `r dim(dataclean)[1]` observations, out of which 7 are numerical and 2 categorical.
+
+###Retrieve dataset
+```{r,}
+write.table(dataclean,"salariesclean.txt", quote= FALSE, sep ="\t", row.names=FALSE)
+```
+
+Now this is the dataset which will be uploaded to SPAD in order to start the analysis.
