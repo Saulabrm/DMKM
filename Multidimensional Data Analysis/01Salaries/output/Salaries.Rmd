@@ -49,18 +49,19 @@ str(data)
 summary(data)
 ```
 
-First, the amount of variables: `Id, EmployeeName,Notes ,Agency` will not be useful for the analysis, so they will be removed.
+* First, the amount of variables: `Id, EmployeeName,Notes ,Agency` will not be useful for the analysis, so they will be removed.
 
-Second, the study will be focused only in year 2014.
+* Second, the study will be focused only in year 2014.
 
-Third, for the variable "TotalPay Benefits" the values below cero are going to be considered as a mistake and they will be removed.
+* Third, for the variable "TotalPay Benefits" the values below cero are going to be considered as a mistake and they will be removed.
 
-Fourth, the empty values for "Status" will be removed
+* Fourth, the empty values for "Status" will be removed
 
-Fifth, the variables `BasePay, Overtime Pay, Other Pay`and `Benefits` will be turned into numericals.
+* Fifth, the variables `BasePay, Overtime Pay, Other Pay`and `Benefits` will be turned into numericals.
 
+* Sixth, Group by Job title, 
 ###Preprocessing
-```{r, echo=FALSE}
+```{r,}
 nums<- c("BasePay","OvertimePay","OtherPay","Benefits")
 stat<- c("FT","PT")
 dataclean<-data %>% 
@@ -75,9 +76,36 @@ summary(dataclean)
 
 At this point, the dataframe was reduced to: `r dim(dataclean)[2]` variables and `r dim(dataclean)[1]` observations, out of which 7 are numerical and 2 categorical.
 
+Work on the categories, since we have 800 differnet ones and too much data for SPAD.
+```{r}
+categories<-dataclean %>% group_by(JobTitle) %>% summarise(n=n()) 
+ordered<-categories[order(-categories$n),]
+OrderedCategories<-ordered %>% mutate(cumsum= cumsum(n))
+Cat<-as.vector(unlist(OrderedCategories[1:10,1]))
+```
+
+```{r}
+dataclean1<- dataclean %>% filter(JobTitle==Cat[1])
+dataclean2<- dataclean %>% filter(JobTitle==Cat[2])
+dataclean3<- dataclean %>% filter(JobTitle==Cat[3])
+dataclean4<- dataclean %>% filter(JobTitle==Cat[4])
+dataclean5<- dataclean %>% filter(JobTitle==Cat[5])
+dataclean6<- dataclean %>% filter(JobTitle==Cat[6])
+dataclean7<- dataclean %>% filter(JobTitle==Cat[7])
+dataclean8<- dataclean %>% filter(JobTitle==Cat[8])
+dataclean9<- dataclean %>% filter(JobTitle==Cat[9])
+dataclean10<-dataclean %>% filter(JobTitle==Cat[10])
+
+datafinal<-rbind(dataclean1,dataclean2,dataclean3,dataclean4,dataclean5,
+                 dataclean6,dataclean7,dataclean8,dataclean9,dataclean10)
+dim(dataclean1)
+dim(dataclean2)
+dim(dataclean3)
+dim(datafinal)
+```
 ###Retrieve dataset
 ```{r,}
-write.table(dataclean,"salariesclean.txt", quote= FALSE, sep ="\t", row.names=FALSE)
+write.table(datafinal,"salariesclean.txt", quote= FALSE, sep ="\t", row.names=FALSE)
 ```
 
 Now this is the dataset which will be uploaded to SPAD in order to start the analysis.

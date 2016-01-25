@@ -217,15 +217,24 @@ data&lt;-read.csv(&quot;Salaries.csv&quot;)</code></pre>
 ##  3rd Qu.:2014                                                    
 ##  Max.   :2014                                                    
 ## </code></pre>
-<p>First, the amount of variables: <code>Id, EmployeeName,Notes ,Agency</code> will not be useful for the analysis, so they will be removed.</p>
-<p>Second, the study will be focused only in year 2014.</p>
-<p>Third, for the variable “TotalPay Benefits” the values below cero are going to be considered as a mistake and they will be removed.</p>
-<p>Fourth, the empty values for “Status” will be removed</p>
-<p>Fifth, the variables <code>BasePay, Overtime Pay, Other Pay</code>and <code>Benefits</code> will be turned into numericals.</p>
-</div>
-<div id="preprocessing" class="section level3">
-<h3>Preprocessing</h3>
+<ul>
+<li><p>First, the amount of variables: <code>Id, EmployeeName,Notes ,Agency</code> will not be useful for the analysis, so they will be removed.</p></li>
+<li><p>Second, the study will be focused only in year 2014.</p></li>
+<li><p>Third, for the variable “TotalPay Benefits” the values below cero are going to be considered as a mistake and they will be removed.</p></li>
+<li><p>Fourth, the empty values for “Status” will be removed</p></li>
+<li><p>Fifth, the variables <code>BasePay, Overtime Pay, Other Pay</code>and <code>Benefits</code> will be turned into numericals.</p></li>
+<li><p>Sixth, Group by Job title, ###Preprocessing</p></li>
+</ul>
+<pre class="r"><code>nums&lt;- c(&quot;BasePay&quot;,&quot;OvertimePay&quot;,&quot;OtherPay&quot;,&quot;Benefits&quot;)
+stat&lt;- c(&quot;FT&quot;,&quot;PT&quot;)
+dataclean&lt;-data %&gt;% 
+            select(-Id, -EmployeeName, -Notes, -Agency) %&gt;% 
+            filter(Year==2014, TotalPayBenefits&gt;=0, Status == stat ) #%&gt;% 
+            #mutate_each(funs(as.numeric),nums)
+dataclean[,nums]&lt;- lapply(dataclean[,nums], as.numeric)
+dim(dataclean)</code></pre>
 <pre><code>## [1] 19000     9</code></pre>
+<pre class="r"><code>str(dataclean)</code></pre>
 <pre><code>## 'data.frame':    19000 obs. of  9 variables:
 ##  $ JobTitle        : Factor w/ 2159 levels &quot;Account Clerk&quot;,..: 592 201 366 371 201 772 187 1728 432 574 ...
 ##  $ BasePay         : num  16381 39552 35069 38699 36012 ...
@@ -236,6 +245,7 @@ data&lt;-read.csv(&quot;Salaries.csv&quot;)</code></pre>
 ##  $ TotalPayBenefits: num  510733 479652 436224 418019 415768 ...
 ##  $ Year            : int  2014 2014 2014 2014 2014 2014 2014 2014 2014 2014 ...
 ##  $ Status          : Factor w/ 3 levels &quot;&quot;,&quot;FT&quot;,&quot;PT&quot;: 3 2 3 2 2 2 2 2 3 2 ...</code></pre>
+<pre class="r"><code>summary(dataclean)</code></pre>
 <pre><code>##                          JobTitle        BasePay        OvertimePay   
 ##  Transit Operator            : 1266   Min.   :    14   Min.   :    3  
 ##  Special Nurse               :  753   1st Qu.: 22499   1st Qu.:    3  
@@ -261,10 +271,36 @@ data&lt;-read.csv(&quot;Salaries.csv&quot;)</code></pre>
 ##  Max.   :2014             
 ## </code></pre>
 <p>At this point, the dataframe was reduced to: 9 variables and 19000 observations, out of which 7 are numerical and 2 categorical.</p>
+<p>Work on the categories, since we have 800 differnet ones and too much data for SPAD.</p>
+<pre class="r"><code>categories&lt;-dataclean %&gt;% group_by(JobTitle) %&gt;% summarise(n=n()) 
+ordered&lt;-categories[order(-categories$n),]
+OrderedCategories&lt;-ordered %&gt;% mutate(cumsum= cumsum(n))
+Cat&lt;-as.vector(unlist(OrderedCategories[1:10,1]))</code></pre>
+<pre class="r"><code>dataclean1&lt;- dataclean %&gt;% filter(JobTitle==Cat[1])
+dataclean2&lt;- dataclean %&gt;% filter(JobTitle==Cat[2])
+dataclean3&lt;- dataclean %&gt;% filter(JobTitle==Cat[3])
+dataclean4&lt;- dataclean %&gt;% filter(JobTitle==Cat[4])
+dataclean5&lt;- dataclean %&gt;% filter(JobTitle==Cat[5])
+dataclean6&lt;- dataclean %&gt;% filter(JobTitle==Cat[6])
+dataclean7&lt;- dataclean %&gt;% filter(JobTitle==Cat[7])
+dataclean8&lt;- dataclean %&gt;% filter(JobTitle==Cat[8])
+dataclean9&lt;- dataclean %&gt;% filter(JobTitle==Cat[9])
+dataclean10&lt;-dataclean %&gt;% filter(JobTitle==Cat[10])
+
+datafinal&lt;-rbind(dataclean1,dataclean2,dataclean3,dataclean4,dataclean5,
+                 dataclean6,dataclean7,dataclean8,dataclean9,dataclean10)
+dim(dataclean1)</code></pre>
+<pre><code>## [1] 1266    9</code></pre>
+<pre class="r"><code>dim(dataclean2)</code></pre>
+<pre><code>## [1] 753   9</code></pre>
+<pre class="r"><code>dim(dataclean3)</code></pre>
+<pre><code>## [1] 589   9</code></pre>
+<pre class="r"><code>dim(datafinal)</code></pre>
+<pre><code>## [1] 5282    9</code></pre>
 </div>
 <div id="retrieve-dataset" class="section level3">
 <h3>Retrieve dataset</h3>
-<pre class="r"><code>write.table(dataclean,&quot;salariesclean.txt&quot;, quote= FALSE, sep =&quot;\t&quot;, row.names=FALSE)</code></pre>
+<pre class="r"><code>write.table(datafinal,&quot;salariesclean.txt&quot;, quote= FALSE, sep =&quot;\t&quot;, row.names=FALSE)</code></pre>
 <p>Now this is the dataset which will be uploaded to SPAD in order to start the analysis.</p>
 </div>
 </div>
