@@ -1,0 +1,134 @@
+SELECTION OF CASES AND VARIABLES
+ACTIVE CATEGORICAL VARIABLES
+     1 VARIABLES       2 ASSOCIATED CATEGORIES
+----------------------------------------------------------------------------------------------------------------------------------
+   9 . JobCategory                                                  (   2 CATEGORIES )
+----------------------------------------------------------------------------------------------------------------------------------
+ACTIVE CONTINUOUS VARIABLES
+     4 VARIABLES
+----------------------------------------------------------------------------------------------------------------------------------
+   2 . BasePay                                                      ( CONTINUOUS )
+   3 . OvertimePay                                                  ( CONTINUOUS )
+   4 . OtherPay                                                     ( CONTINUOUS )
+   5 . Benefits                                                     ( CONTINUOUS )
+----------------------------------------------------------------------------------------------------------------------------------
+CASES
+----------------------------- NUMBER --------------WEIGHT ---------------
+ WEIGHT OF CASES      : Weight of objects, uniform equal to 1.                  UNIF
+ KEPT ............... NITOT =   5282      PITOT =            5282.000
+ ACTIVE ............. NIACT =   5282      PIACT =            5282.000
+ SUPPLEMENTARY ...... NISUP =      0      PISUP =               0.000
+-------------------------------------------------------------------------
+
+TWO GROUPS DISCRIMINANT ANALYSIS
+MODEL  1
+DEFINITION
+:----- Model -----
+V9 = V2--V5
+MISSING DATA MANAGEMENT
+MISSING VALUES ARE REPLACED BY THE INTRA-GROUP MEANS
+FOR THE ANONYMOUS CASES THEY ARE REPLACED BY THE GENERAL MEANS
+--------------------------------------------------------------------------------------------------------------
+GRP VAR. INTRA GROUP     GENERAL   NB. MISSING
+    NUM.    MEANS         MEAN     VALUES      VARIABLE LABEL
+--------------------------------------------------------------------------------------------------------------
+  1   2   53776.367   48420.410         0      BasePay
+  1   3   28312.570   21567.059         0      OvertimePay
+  1   4   40713.844   37888.281         0      OtherPay
+  1   5   54252.871   51692.371         0      Benefits
+  2   2   42369.047   48420.410         0      BasePay
+  2   3   13945.716   21567.059         0      OvertimePay
+  2   4   34695.852   37888.281         0      OtherPay
+  2   5   48799.422   51692.371         0      Benefits
+--------------------------------------------------------------------------------------------------------------
+
+LINEAR DISCRIMINANT ANALYSIS ON THE SAMPLE   : LEARNING
+BETWEEN THE 2 GROUPS: Defense Dpmt          AND  Healthcare
+GROUP VARIABLE NUMBER   9 : JobCategory
+RESULTS OF THE FISHER LINEAR DISCRIMINATION
+TABLE OF GROUPS COUNTS
+                        ASSIGNMENT GROUPS
+                          m1       m2
+ORIGINAL GROUPS   -------------------------
+                  m1      1858      944
+                  m2       762     1718
+                  -------------------------
+CLASSIFICATION TABLE
+                       CLASSIFICATION COUNTS AND (PERCENTAGES)
+                       WELL CLASSIFIED   MISCLASSIFIED      TOTAL
+ORIGINAL GROUPS   --------------------------------------------------
+                  m1      1858.00          944.00         2802.00
+                           ( 66.31)        ( 33.69)        (100.00)
+                  --------------------------------------------------
+                  m2      1718.00          762.00         2480.00
+                           ( 69.27)        ( 30.73)        (100.00)
+                  --------------------------------------------------
+                 TOTAL    3576.00         1706.00         5282.00
+                           ( 67.70)        ( 32.30)        (100.00)
+DISCRIMINANT LINEAR FUNCTION
+VARIABLES                        CORRELATIONS       COEFFICIENTS        STANDARD  RATIO
+........                          VARIABLES      DISCRIM.  REGRESSION     DEV.  COEF/ST. DEV
+NUM LABELS                        WITH L.D.F.    FUNCTION               (RES. TYPE REG.)
+                              (THRESHOLD= 0.03)
+..............................................................................................
+  2 BasePay                         0.179          0.0000      0.0000     0.0000  13.81
+  3 OvertimePay                     0.328          0.0000      0.0000     0.0000  24.42
+  4 OtherPay                        0.116          0.0000      0.0000     0.0000   5.60
+  5 Benefits                        0.088          0.0000      0.0000     0.0000   4.70
+CONSTANT                                        -1.822290   -0.783950     0.0374 ******
+..............................................................................................
+R2 =    0.14828     F  =  229.66777     PROB. =      0.000
+D2 =    0.69869     T2 =  919.19336     PROB. =      0.000
+..............................................................................................
+
+HISTOGRAMS
+HISTOGRAM OBTAINED ON GROUP m1
+     -1.7    -1.4    -1.1    -0.8    -0.5    -0.2     0.1     0.4     0.7     1.0     1.3     1.6     1.9     2.2     2.5
+ -1.8    -1.5    -1.2    -0.9    -0.6    -0.3     0.0     0.3     0.6     0.9     1.2     1.4     1.7     2.0     2.3     2.6
+   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+                                                       m1  m1
+                                                       m1  m1
+                                                       m1  m1
+                                           m1          m1  m1  m1
+                                           m1      m1  m1  m1  m1  m1
+                                           m1      m1  m1  m1  m1  m1
+                                           m1  m1  m1  m1  m1  m1  m1  m1  m1
+                                           m1  m1  m1  m1  m1  m1  m1  m1  m1
+                                           m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1
+                                   m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1
+                           m1      m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1
+                           m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1
+                       m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1
+                   m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1
+                   m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1
+               m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1
+               m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1  m1
+   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+      6   4  11  29  59  75  89  88 107 111 178 144 174 226 228 183 170 152 141 118 123 100  76  65  54  43  25  10   8   5
+HISTOGRAM OBTAINED ON GROUP m2
+     -1.7    -1.4    -1.1    -0.8    -0.5    -0.2     0.1     0.4     0.7     1.0     1.3     1.6     1.9     2.2     2.5
+ -1.8    -1.5    -1.2    -0.9    -0.6    -0.3     0.0     0.3     0.6     0.9     1.2     1.4     1.7     2.0     2.3     2.6
+   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+                           m2
+                           m2      m2
+                           m2      m2
+                       m2  m2      m2
+                   m2  m2  m2      m2
+                   m2  m2  m2  m2  m2
+               m2  m2  m2  m2  m2  m2
+               m2  m2  m2  m2  m2  m2  m2  m2
+           m2  m2  m2  m2  m2  m2  m2  m2  m2  m2
+           m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2
+           m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2
+           m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2      m2
+           m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2
+       m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2
+       m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2
+   m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2
+   m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2  m2
+   +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+     36  57 116 148 176 187 220 153 203 134 134 123 104  91  79  80  82  73  80  63  40  31  18  16  16  16   4   0   0   0
+
+MODEL  2
+DEFINITION
+END

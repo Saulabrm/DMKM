@@ -5,13 +5,19 @@ date: "January 22, 2016"
 output: html_document
 ---
 
-##Summary
-The objective of this project is to a descriptive analyses of the San Francisco's salaries dataset in order to find if there exists links betweeen the variables of this dataset and answer different questions. It is required to explore, and clean the data in order to be able further analyse it using SPAD software.
+##Abstract
+The objective of this project is to perform a descriptive analyses of the San Francisco's salaries dataset in order to find if there exists links betweeen the variables of this dataset and answer different questions. It is required to explore, and clean the data in order to be able further analyse it using SPAD software.
 
 ##Intro 
-In order for San Francisco to become a more transparent city, they decided to release a dataset of the Salaries of the city from the years 2010-2014. We chose this [dataset](http://transparentcalifornia.com/salaries/san-francisco/) in order to pursue our study of classification utilizing the methods "PCA, CA, MCA and FDA".
+In order for San Francisco to become a more transparent city, they decided to release a dataset of the Salaries of the city from the years 2010-2014. We chose this [dataset](http://transparentcalifornia.com/salaries/san-francisco/) in order to answer the following questions: 
 
-Questions? Which methods we can use for each question.
+1. Is there any links or correlation between the Salaries of the residents of San Francisco?
+
+2. Is there a link between Job Title and the working Status (Full-Time, Part-Time)?
+
+3. Can we use Salary to explain the Job Title or the working Status?
+
+In order to pursue this study, discriminant analysis will be applied, utilizing the methods "PCA, CA and FDA".
 
 ##Dataset
 ###Loading
@@ -48,18 +54,18 @@ The dataset has the following variables:
 str(data)
 summary(data)
 ```
+Reducing the dataset:
 
-* First, the amount of variables: `Id, EmployeeName,Notes ,Agency` will not be useful for the analysis, so they will be removed.
+1. Remove variables: `Id, EmployeeName, Notes , Agency` will not be useful for the analysis, so they will be removed.
 
-* Second, the study will be focused only in year 2014.
+2. Filter the year: The dataset contains 3 years of data, for the purpose of this study, the focus will rely on year 2014.
 
-* Third, for the variable "TotalPay Benefits" the values below cero are going to be considered as a mistake and they will be removed.
+3. Filter variable "TotalPayBenefits": the values below cero are going to be considered as a mistake and they will be removed.
 
-* Fourth, the empty values for "Status" will be removed
+4. Remove values: The empty values for "Status" will be removed
 
-* Fifth, the variables `BasePay, Overtime Pay, Other Pay`and `Benefits` will be turned into numericals.
+5. Classes: `BasePay, Overtime Pay, Other Pay`and `Benefits` will be turned into numericals.
 
-* Sixth, Group by Job title, 
 ###Preprocessing
 ```{r,}
 nums<- c("BasePay","OvertimePay","OtherPay","Benefits")
@@ -76,8 +82,10 @@ summary(dataclean)
 
 At this point, the dataframe was reduced to: `r dim(dataclean)[2]` variables and `r dim(dataclean)[1]` observations, out of which 7 are numerical and 2 categorical.
 
-Work on the categories, since we have 800 differnet ones and too much data for SPAD.
+The variable `JobTitle` (categorical), is hard to analyse by having over 800 different categories, and since SPAD will reduce the dataset, a decision was made to filter the dataset by the top 10 most popular `Job Titles` in San Francisco.
+
 ```{r}
+#Set the categories and order them
 categories<-dataclean %>% group_by(JobTitle) %>% summarise(n=n()) 
 ordered<-categories[order(-categories$n),]
 OrderedCategories<-ordered %>% mutate(cumsum= cumsum(n))
@@ -95,12 +103,8 @@ dataclean7<- dataclean %>% filter(JobTitle==Cat[7])
 dataclean8<- dataclean %>% filter(JobTitle==Cat[8])
 dataclean9<- dataclean %>% filter(JobTitle==Cat[9])
 dataclean10<-dataclean %>% filter(JobTitle==Cat[10])
-
 datafinal<-rbind(dataclean1,dataclean2,dataclean3,dataclean4,dataclean5,
                  dataclean6,dataclean7,dataclean8,dataclean9,dataclean10)
-dim(dataclean1)
-dim(dataclean2)
-dim(dataclean3)
 dim(datafinal)
 ```
 ###Retrieve dataset
