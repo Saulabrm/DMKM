@@ -1,15 +1,19 @@
 ---
-title: "Salaries"
+title: "Salaries of San Francisco"
 author: "Mr. Garcia, Mr. Kalyan"
 date: "January 22, 2016"
-output: html_document
+output: 
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
 ---
-
+***
 ##Abstract
-The objective of this project is to perform a descriptive analyses of the San Francisco's salaries dataset in order to find if there exists links betweeen the variables of this dataset and answer different questions. It is required to explore, and clean the data in order to be able further analyse it using SPAD software.
+The objective of this project is to perform a descriptive analysis of the San Francisco's salaries dataset in order to find if there exists links betweeen the variables of this dataset and answer different questions. R Studio was utilized for exploring and cleaning the data, and in order to further analyse it, SPAD software was used.
 
 ##Intro 
-In order for San Francisco to become a more transparent city, they decided to release a dataset of the Salaries of the city from the years 2010-2014. We chose this [dataset](http://transparentcalifornia.com/salaries/san-francisco/) in order to answer the following questions: 
+In order for San Francisco to become a more transparent city, they decided to release a sample dataset of the Salaries of the city from the years 2010-2014. We chose this [dataset](http://transparentcalifornia.com/salaries/san-francisco/) in order to answer the following questions: 
 
 1. Is there any links or correlation between the Salaries of the residents of San Francisco?
 
@@ -17,22 +21,22 @@ In order for San Francisco to become a more transparent city, they decided to re
 
 3. Can we use Salary to explain the Job Title or the working Status?
 
-In order to pursue this study, discriminant analysis will be applied, utilizing the methods "PCA, CA and FDA".
+In order to pursue this study, the methods "PCA, CA, and FDA" were applied for discriminant analysis.
 
 ##Dataset
-###Loading
-```{r, message=FALSE}
+###Loading 
+```{r, echo=FALSE, cache=FALSE, message=FALSE}
 library(dplyr)
 data<-read.csv("Salaries.csv")
 ```
-###Exploring
-```{r,}
+
+```{r, echo=FALSE, cache=FALSE, message=FALSE, results= 'hide'}
 dim(data)
 ```
-This dataset contains `r dim(data)[2]` variables and `r dim(data)[1]` observations. Which we know in advance that it is more than the amount we can read in SPAD. For this reason the data will be futher explore in order to determine what are the important variables for our study.
+First of all the dataset was loaded, and its dimensions were explored. The dataset contains `r dim(data)[2]` variables and `r dim(data)[1]` observations. Which we know in advance that it is more than the amount which can be read by SPAD. For this reason the data will be futher explore in order to determine what are the important variables for the study.
 
 ###Description
-The dataset has the following variables:
+The dataset has the following variables:  
 
 | Name | Class | Description |
 | ------------ | ------------ | ------------ |
@@ -50,11 +54,14 @@ The dataset has the following variables:
 |  `r names(data)[12]` | Factor | Place (San Francisco for all the observations) | 
 |  `r names(data)[13]` | Factor | Status of the Employee (Full Time, Part Time) | 
 
-```{r,}
+An exploration of the *structure* and a *summary* of the data was made in order to have insights about the data. After this we have enough information to decide which variables have to be filtered, reduced or even removed.
+
+```{r, results= 'hide' ,echo=FALSE}
 str(data)
 summary(data)
 ```
-Reducing the dataset:
+
+###Preprocessing the dataset:
 
 1. Remove variables: `Id, EmployeeName, Notes , Agency` will not be useful for the analysis, so they will be removed.
 
@@ -66,8 +73,8 @@ Reducing the dataset:
 
 5. Classes: `BasePay, Overtime Pay, Other Pay`and `Benefits` will be turned into numericals.
 
-###Preprocessing
-```{r,}
+```{r,echo=FALSE, message=FALSE, results='hide'}
+#Preprocessing
 nums<- c("BasePay","OvertimePay","OtherPay","Benefits")
 stat<- c("FT","PT")
 dataclean<-data %>% 
@@ -75,16 +82,15 @@ dataclean<-data %>%
             filter(Year==2014, TotalPayBenefits>=0, Status == stat ) #%>% 
             #mutate_each(funs(as.numeric),nums)
 dataclean[,nums]<- lapply(dataclean[,nums], as.numeric)
-dim(dataclean)
+#dim(dataclean)
 str(dataclean)
-summary(dataclean)
 ```
 
-At this point, the dataframe was reduced to: `r dim(dataclean)[2]` variables and `r dim(dataclean)[1]` observations, out of which 7 are numerical and 2 categorical.
+At this point, the dataframe was reduced to: `r dim(dataclean)[2]` variables,out of which 7 are numerical and 2 categorical, and `r dim(dataclean)[1]` observations.
 
-The variable `JobTitle` (categorical), is hard to analyse by having over 800 different categories, and since SPAD will reduce the dataset, a decision was made to filter the dataset by the top 10 most popular `Job Titles` in San Francisco.
+The variable `JobTitle` (categorical), is hard to analyse by having 2159 levels, or modalities, and since SPAD's student license can not handle huge datasets, a decision was made to filter the dataset by the top 10 most popular `Job Titles` in San Francisco.
 
-```{r}
+```{r, message=FALSE, echo=FALSE}
 #Set the categories and order them
 categories<-dataclean %>% group_by(JobTitle) %>% summarise(n=n()) 
 ordered<-categories[order(-categories$n),]
@@ -92,7 +98,8 @@ OrderedCategories<-ordered %>% mutate(cumsum= cumsum(n))
 Cat<-as.vector(unlist(OrderedCategories[1:10,1]))
 ```
 
-```{r}
+```{r, message=FALSE, echo=FALSE}
+#Bind the data for each category
 dataclean1<- dataclean %>% filter(JobTitle==Cat[1])
 dataclean2<- dataclean %>% filter(JobTitle==Cat[2])
 dataclean3<- dataclean %>% filter(JobTitle==Cat[3])
@@ -105,11 +112,79 @@ dataclean9<- dataclean %>% filter(JobTitle==Cat[9])
 dataclean10<-dataclean %>% filter(JobTitle==Cat[10])
 datafinal<-rbind(dataclean1,dataclean2,dataclean3,dataclean4,dataclean5,
                  dataclean6,dataclean7,dataclean8,dataclean9,dataclean10)
-dim(datafinal)
-```
-###Retrieve dataset
-```{r,}
-write.table(datafinal,"salariesclean.txt", quote= FALSE, sep ="\t", row.names=FALSE)
+
 ```
 
-Now this is the dataset which will be uploaded to SPAD in order to start the analysis.
+Finally the dataset ends up with the following structure and summary:
+
+The dataframe was reduced to: `r dim(datafinal)[2]` variables and `r dim(datafinal)[1]` observations. 
+
+####Data Structure
+```{r, echo=FALSE}
+str(datafinal)
+```
+####Data Summary
+```{r, echo=FALSE}
+summary(datafinal)
+```
+
+```{r, echo=FALSE}
+####Retrieve dataset
+write.table(datafinal,"salariesclean.txt", quote= FALSE, sep ="\t", row.names=FALSE)
+```
+Now this is the dataset which will be uploaded to SPAD in order to be analyzed.
+
+##Discriminant Analysis
+After importing the data to SPAD, the first step is to generate statistics and explore our values. (SHOULD WE PRINT THE STATISTICS FOR CONTINUOUS AND CATEGORICAL VARIABLES?) The continuous variables seem to be fine, it is only important to be aware for further analysis that `TotalPay` and `TotalBenefitsPay` are the linear combination of the other continuous variables.
+
+Then, it is important to evaluate the behaviour of the categorical variables by creating a cross table, which will be later needed for a Correspondance Analysis.
+
+![alt tag](/Users/saulgarcia/Desktop/Github/DMKM/Multidimensional Data Analysis/01Salaries/SPAD/CrossTable.png)
+
+Because Special Nurse and Recreation Leader have a frequency lower than five for one of the modalities of Status, then *Yates correction* is applied. Special Nurse and Registered Nurse will now become the new category `Nurse`, while, `Recreational Leader` will be discarded, providing with these changes another variable called `New_JobTitle`.
+
+##Principal Component Analysis  
+**Is there any links or correlation between the Salaries of the residents of San Francisco?**
+
+The four continuous variables selected for PCA were `BasePay`, `OvertimePay`, `OtherPay`, `Benefits`. `New_JobTitle` and `Status` were chosen as supplementary categorical variables.  The other two continuous variables `TotalPay` and `TotalPayBenefits` were removed from the analysis as they were linear combinations of the variables selected for PCA.
+
+###Analysis  
+The first two principle axis capture 56% of the variation in data. Significant active variables on the first factorial plane are `OvertimePay` and `OtherPay` and significant active variables on the second factorial plane are the following variables `BasePay`, `Benefits` and `OtherPay`.  
+There is a link between `OvertimePay` and `OtherPay` on the first factorial plane where as `Benefits` and `BasePay` are in opposition on the second factorial plane. 
+We see that Transit Operator and Deputy Sheriff have similar profile just as Firefighter and Police Officer have similar profiles, and they both tend to be `FullTime`, different from Public Service Aid, which tends to be `PartTime`.
+
+![alt tag](/Users/saulgarcia/Desktop/Github/DMKM/Multidimensional Data Analysis/01Salaries/SPAD/01PCA2.png)
+Hereby is the [Table of Contributions](https://github.com/Saulabrm/DMKM/blob/master/Multidimensional%20Data%20Analysis/01Salaries/SPAD/01PCA.txt).
+
+##Correspondence Analysis  
+**Is there a link between Job Title and the working Status (Full-Time, Part-Time)?**
+
+Variables selected for CA are `JobTitle` and `Status`. All the variation in our data is well captured by the first principle component since one of our variables has two modalities. For the variable `JobTitle` Nurse, Public Service Aide and Fire Fighter have high contribution on the first factorial plane compared to other modalities.   There exist a strong link between Full time jobs and Deputy Sheriff, Fire Fighter and Police Officer. In contrast there is also a strong link between Part time jobs and Public Service Aide and Nurse.
+
+
+![alt tag](/Users/saulgarcia/Desktop/Github/DMKM/Multidimensional Data Analysis/01Salaries/SPAD/02CA.png)
+
+Hereby is the [Table of Contributions](https://github.com/Saulabrm/DMKM/blob/master/Multidimensional%20Data%20Analysis/01Salaries/SPAD/02CA.txt).
+
+##Factorial Discriminant Analysis
+**Can we use Salary to explain the Job Title or the working Status?**
+
+Given the fact that in order to do a Factorial Discriminant Analysis (FDA), is necessary to have an explain categorical variable and several explanatory continuous variables, two FDAs will be executed, one with the variable to explain being, `
+JobTitle` and the other being, `Status`.
+
+###Factorial Discriminant Analysis on JobTitle
+Normally a Factorial Discriminant Analysis would be capable of analysing an explain categorical variable with multiple modalities. Since the SPAD student version used for this study can not support more than two, the modalities for `JobTitle` had to be reduced. The new variable is called `Job Category` and its modalities are the following:
+
+* `Defense`: By merging `Custodian`, `Deputy Sheriff`, `Firefighters`, `Police Officer 3`, and `Transit Operator`.
+* `Healthcare`: `Patient Care Assistant`, `Public Svc Aide-Public Works`, `Recreation Leader`, `Registered Nurse`, and 'Special Nurse`.
+
+The explanatory variables are `BasePay`, `OvertimePay`, `OtherPay`, `Benefits` and to explain the variable `JobCategory`. Modalities of the variable `JobCategory` are Defense and Healthcare. The model obtained is significant as p value is less than 5%. All the explanatory variables are significant as their absolute ratios >= 1.96. 68% of the data points are well classified by the model. Overtime pay has the highest function of Fisher.
+
+Hereby is the [Classification Table](https://github.com/Saulabrm/DMKM/blob/master/Multidimensional%20Data%20Analysis/01Salaries/SPAD/03FDA-JobTitle.txt).
+
+###Factorial Discriminant Analysis on Status
+For the Discriminant Analysis on Status in SPAD, is possible to directly use
+
+The explanatory variables are `BasePay`, `OvertimePay`, `OtherPay`, `Benefits` and to explain the variable `Status`. Modalities of the variable `Status` are Full Time and Part Time. The model obtained is significant as p value is less than 5%. All the explanatory variables are significant as their absolute ratios >= 1.96. 70% f the data points are well classified by the model. Overtime pay has the highest function of Fisher.
+
+Hereby is the [Classification Table](https://github.com/Saulabrm/DMKM/blob/master/Multidimensional%20Data%20Analysis/01Salaries/SPAD/03FDA-Status.txt).

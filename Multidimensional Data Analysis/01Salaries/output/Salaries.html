@@ -67,10 +67,26 @@ img {
 <h4 class="date"><em>January 22, 2016</em></h4>
 </div>
 
+<div id="TOC">
+<ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#dataset">Dataset</a><ul>
+<li><a href="#loading">Loading</a></li>
+<li><a href="#description">Description</a></li>
+<li><a href="#preprocessing-the-dataset">Preprocessing the dataset:</a></li>
+</ul></li>
+<li><a href="#discriminant-analysis">Discriminant Analysis</a><ul>
+<li><a href="#principal-component-analysis">Principal Component Analysis</a></li>
+<li><a href="#componen-analysis">Componen Analysis</a></li>
+<li><a href="#factorial-discriminant-analysis">Factorial Discriminant Analysis</a></li>
+</ul></li>
+</ul>
+</div>
 
 <div id="abstract" class="section level2">
 <h2>Abstract</h2>
-<p>The objective of this project is to perform a descriptive analyses of the San Francisco’s salaries dataset in order to find if there exists links betweeen the variables of this dataset and answer different questions. It is required to explore, and clean the data in order to be able further analyse it using SPAD software.</p>
+<p>The objective of this project is to perform a descriptive analyses of the San Francisco’s salaries dataset in order to find if there exists links betweeen the variables of this dataset and answer different questions. R Studio was utilized for exploring and cleaning the data, and in order to further analyse it, SPAD software was used.</p>
 </div>
 <div id="intro" class="section level2">
 <h2>Intro</h2>
@@ -86,14 +102,7 @@ img {
 <h2>Dataset</h2>
 <div id="loading" class="section level3">
 <h3>Loading</h3>
-<pre class="r"><code>library(dplyr)
-data&lt;-read.csv(&quot;Salaries.csv&quot;)</code></pre>
-</div>
-<div id="exploring" class="section level3">
-<h3>Exploring</h3>
-<pre class="r"><code>dim(data)</code></pre>
-<pre><code>## [1] 148654     13</code></pre>
-<p>This dataset contains 13 variables and 148654 observations. Which we know in advance that it is more than the amount we can read in SPAD. For this reason the data will be futher explore in order to determine what are the important variables for our study.</p>
+<p>First of all the dataset was loaded, and its dimensions were explored. The dataset contains 13 variables and 148654 observations. Which we know in advance that it is more than the amount we can read in SPAD. For this reason the data will be futher explore in order to determine what are the important variables for our study.</p>
 </div>
 <div id="description" class="section level3">
 <h3>Description</h3>
@@ -174,55 +183,10 @@ data&lt;-read.csv(&quot;Salaries.csv&quot;)</code></pre>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>str(data)</code></pre>
-<pre><code>## 'data.frame':    148654 obs. of  13 variables:
-##  $ Id              : int  1 2 3 4 5 6 7 8 9 10 ...
-##  $ EmployeeName    : Factor w/ 110811 levels &quot;A Bernard  Fatooh&quot;,..: 77635 34712 1560 17232 81102 23164 3271 22709 73975 47938 ...
-##  $ JobTitle        : Factor w/ 2159 levels &quot;Account Clerk&quot;,..: 836 298 298 2149 594 135 246 609 246 370 ...
-##  $ BasePay         : Factor w/ 109725 levels &quot;&quot;,&quot;-101.88&quot;,&quot;-106.6&quot;,..: 25366 23451 31142 91544 18313 12176 104137 35024 26871 37140 ...
-##  $ OvertimePay     : Factor w/ 66162 levels &quot;-0.01&quot;,&quot;0.0&quot;,..: 2 25591 1633 49902 65450 61980 63016 2 62071 2 ...
-##  $ OtherPay        : Factor w/ 84243 levels &quot;-46.76&quot;,&quot;-50.19&quot;,..: 49518 12331 19387 27245 23757 25381 11472 58646 49601 21032 ...
-##  $ Benefits        : Factor w/ 98648 levels &quot;&quot;,&quot;-13.80&quot;,&quot;-2.73&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ TotalPay        : num  567595 538909 335280 332344 326373 ...
-##  $ TotalPayBenefits: num  567595 538909 335280 332344 326373 ...
-##  $ Year            : int  2011 2011 2011 2011 2011 2011 2011 2011 2011 2011 ...
-##  $ Notes           : logi  NA NA NA NA NA NA ...
-##  $ Agency          : Factor w/ 1 level &quot;San Francisco&quot;: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ Status          : Factor w/ 3 levels &quot;&quot;,&quot;FT&quot;,&quot;PT&quot;: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
-<pre class="r"><code>summary(data)</code></pre>
-<pre><code>##        Id               EmployeeName   
-##  Min.   :     1   Kevin Lee   :    13  
-##  1st Qu.: 37164   Richard Lee :    11  
-##  Median : 74328   Steven Lee  :    11  
-##  Mean   : 74328   William Wong:    11  
-##  3rd Qu.:111491   John Chan   :     9  
-##  Max.   :148654   KEVIN LEE   :     9  
-##                   (Other)     :148590  
-##                          JobTitle          BasePay        OvertimePay   
-##  Transit Operator            :  7036   0.0     :   872   0.0    :57868  
-##  Special Nurse               :  4389           :   605   0.00   :19453  
-##  Registered Nurse            :  3736   0.00    :   426   10.68  :   41  
-##  Public Svc Aide-Public Works:  2518   54703.00:   338   681.23 :   41  
-##  Police Officer 3            :  2421   55026.0 :   297   152.13 :   38  
-##  Custodian                   :  2418   48472.4 :   210   1314.78:   27  
-##  (Other)                     :126136   (Other) :145906   (Other):71186  
-##     OtherPay         Benefits         TotalPay        TotalPayBenefits  
-##  0.0    : 30068          : 36159   Min.   :  -618.1   Min.   :  -618.1  
-##  0.00   : 11532   0.0    :  1024   1st Qu.: 36169.0   1st Qu.: 44065.7  
-##  624.0  :  1340   0.00   :   710   Median : 71426.6   Median : 92404.1  
-##  624.00 :   752   7959.18:   348   Mean   : 74768.3   Mean   : 93692.6  
-##  648.0  :   739   4659.36:   107   3rd Qu.:105839.1   3rd Qu.:132876.5  
-##  250.0  :   676   25699.2:    83   Max.   :567595.4   Max.   :567595.4  
-##  (Other):103547   (Other):110223                                        
-##       Year       Notes                   Agency       Status     
-##  Min.   :2011   Mode:logical   San Francisco:148654     :110535  
-##  1st Qu.:2012   NA's:148654                           FT: 22334  
-##  Median :2013                                         PT: 15785  
-##  Mean   :2013                                                    
-##  3rd Qu.:2014                                                    
-##  Max.   :2014                                                    
-## </code></pre>
-<p>Reducing the dataset:</p>
+<p>An exploration of the <em>structure</em> and a <em>summary</em> of the data was made in order to have insights about the data. After this we have enough information to decide which variables have to be filtered, reduced or even removed.</p>
+</div>
+<div id="preprocessing-the-dataset" class="section level3">
+<h3>Preprocessing the dataset:</h3>
 <ol style="list-style-type: decimal">
 <li><p>Remove variables: <code>Id, EmployeeName, Notes , Agency</code> will not be useful for the analysis, so they will be removed.</p></li>
 <li><p>Filter the year: The dataset contains 3 years of data, for the purpose of this study, the focus will rely on year 2014.</p></li>
@@ -230,80 +194,64 @@ data&lt;-read.csv(&quot;Salaries.csv&quot;)</code></pre>
 <li><p>Remove values: The empty values for “Status” will be removed</p></li>
 <li><p>Classes: <code>BasePay, Overtime Pay, Other Pay</code>and <code>Benefits</code> will be turned into numericals.</p></li>
 </ol>
-</div>
-<div id="preprocessing" class="section level3">
-<h3>Preprocessing</h3>
-<pre class="r"><code>nums&lt;- c(&quot;BasePay&quot;,&quot;OvertimePay&quot;,&quot;OtherPay&quot;,&quot;Benefits&quot;)
-stat&lt;- c(&quot;FT&quot;,&quot;PT&quot;)
-dataclean&lt;-data %&gt;% 
-            select(-Id, -EmployeeName, -Notes, -Agency) %&gt;% 
-            filter(Year==2014, TotalPayBenefits&gt;=0, Status == stat ) #%&gt;% 
-            #mutate_each(funs(as.numeric),nums)
-dataclean[,nums]&lt;- lapply(dataclean[,nums], as.numeric)
-dim(dataclean)</code></pre>
-<pre><code>## [1] 19000     9</code></pre>
-<pre class="r"><code>str(dataclean)</code></pre>
-<pre><code>## 'data.frame':    19000 obs. of  9 variables:
-##  $ JobTitle        : Factor w/ 2159 levels &quot;Account Clerk&quot;,..: 592 201 366 371 201 772 187 1728 432 574 ...
-##  $ BasePay         : num  16381 39552 35069 38699 36012 ...
-##  $ OvertimePay     : num  3 1892 3 3 51815 ...
-##  $ OtherPay        : num  44356 65066 76818 26166 69604 ...
-##  $ Benefits        : num  72884 97110 98210 97416 94200 ...
-##  $ TotalPay        : num  471953 390112 339654 326717 344187 ...
-##  $ TotalPayBenefits: num  510733 479652 436224 418019 415768 ...
-##  $ Year            : int  2014 2014 2014 2014 2014 2014 2014 2014 2014 2014 ...
-##  $ Status          : Factor w/ 3 levels &quot;&quot;,&quot;FT&quot;,&quot;PT&quot;: 3 2 3 2 2 2 2 2 3 2 ...</code></pre>
-<pre class="r"><code>summary(dataclean)</code></pre>
-<pre><code>##                          JobTitle        BasePay        OvertimePay   
-##  Transit Operator            : 1266   Min.   :    14   Min.   :    3  
-##  Special Nurse               :  753   1st Qu.: 22499   1st Qu.:    3  
-##  Registered Nurse            :  589   Median : 55088   Median :    3  
-##  Public Svc Aide-Public Works:  449   Mean   : 53879   Mean   :15971  
-##  Firefighter                 :  424   3rd Qu.: 83631   3rd Qu.:31480  
-##  Custodian                   :  401   Max.   :109724   Max.   :66148  
-##  (Other)                     :15118                                   
-##     OtherPay        Benefits        TotalPay      TotalPayBenefits
-##  Min.   :    7   Min.   :    2   Min.   :     0   Min.   :     0  
-##  1st Qu.:    7   1st Qu.:24963   1st Qu.: 33328   1st Qu.: 43856  
-##  Median :24104   Median :48328   Median : 72400   Median :101325  
-##  Mean   :29498   Mean   :49026   Mean   : 75580   Mean   :100372  
-##  3rd Qu.:55401   3rd Qu.:74234   3rd Qu.:107966   3rd Qu.:142849  
-##  Max.   :84230   Max.   :98646   Max.   :471953   Max.   :510733  
-##                                                                   
-##       Year      Status    
-##  Min.   :2014     :    0  
-##  1st Qu.:2014   FT:11137  
-##  Median :2014   PT: 7863  
-##  Mean   :2014             
-##  3rd Qu.:2014             
-##  Max.   :2014             
-## </code></pre>
 <p>At this point, the dataframe was reduced to: 9 variables and 19000 observations, out of which 7 are numerical and 2 categorical.</p>
-<p>The variable <code>JobTitle</code> (categorical), is hard to analyse by having over 800 different categories, and since SPAD will reduce the dataset, a decision was made to filter the dataset by the top 10 most popular <code>Job Titles</code> in San Francisco.</p>
-<pre class="r"><code>#Set the categories and order them
-categories&lt;-dataclean %&gt;% group_by(JobTitle) %&gt;% summarise(n=n()) 
-ordered&lt;-categories[order(-categories$n),]
-OrderedCategories&lt;-ordered %&gt;% mutate(cumsum= cumsum(n))
-Cat&lt;-as.vector(unlist(OrderedCategories[1:10,1]))</code></pre>
-<pre class="r"><code>dataclean1&lt;- dataclean %&gt;% filter(JobTitle==Cat[1])
-dataclean2&lt;- dataclean %&gt;% filter(JobTitle==Cat[2])
-dataclean3&lt;- dataclean %&gt;% filter(JobTitle==Cat[3])
-dataclean4&lt;- dataclean %&gt;% filter(JobTitle==Cat[4])
-dataclean5&lt;- dataclean %&gt;% filter(JobTitle==Cat[5])
-dataclean6&lt;- dataclean %&gt;% filter(JobTitle==Cat[6])
-dataclean7&lt;- dataclean %&gt;% filter(JobTitle==Cat[7])
-dataclean8&lt;- dataclean %&gt;% filter(JobTitle==Cat[8])
-dataclean9&lt;- dataclean %&gt;% filter(JobTitle==Cat[9])
-dataclean10&lt;-dataclean %&gt;% filter(JobTitle==Cat[10])
-datafinal&lt;-rbind(dataclean1,dataclean2,dataclean3,dataclean4,dataclean5,
-                 dataclean6,dataclean7,dataclean8,dataclean9,dataclean10)
-dim(datafinal)</code></pre>
-<pre><code>## [1] 5282    9</code></pre>
+<p>The variable <code>JobTitle</code> (categorical), is hard to analyse by having 2159 levels, or modalities, and since SPAD will reduce the dataset, a decision was made to filter the dataset by the top 10 most popular <code>Job Titles</code> in San Francisco.</p>
+<p>Finally the dataset ends up with the following structure and summary:</p>
+<p>The dataframe was reduced to: 9 variables and 5282 observations, out of which 7 are numerical and 2 categorical. ####Data Structure</p>
+<pre><code>## 'data.frame':    5282 obs. of  9 variables:
+##  $ JobTitle        : Factor w/ 2159 levels &quot;Account Clerk&quot;,..: 2038 2038 2038 2038 2038 2038 2038 2038 2038 2038 ...
+##  $ BasePay         : num  83997 84651 83101 82222 81838 ...
+##  $ OvertimePay     : num  59452 57451 52025 49521 47731 ...
+##  $ OtherPay        : num  68826 69563 76318 73639 74802 ...
+##  $ Benefits        : num  72037 73204 72029 70263 70017 ...
+##  $ TotalPay        : num  155765 151286 138509 131865 128545 ...
+##  $ TotalPayBenefits: num  194247 190147 176989 169765 166361 ...
+##  $ Year            : int  2014 2014 2014 2014 2014 2014 2014 2014 2014 2014 ...
+##  $ Status          : Factor w/ 3 levels &quot;&quot;,&quot;FT&quot;,&quot;PT&quot;: 2 2 2 2 2 2 2 2 2 2 ...</code></pre>
+<div id="data-summary" class="section level4">
+<h4>Data Summary</h4>
+<pre><code>##                          JobTitle       BasePay        OvertimePay   
+##  Transit Operator            :1266   Min.   :    14   Min.   :    3  
+##  Special Nurse               : 753   1st Qu.: 17184   1st Qu.:    3  
+##  Registered Nurse            : 589   Median : 47800   Median :15834  
+##  Public Svc Aide-Public Works: 449   Mean   : 48420   Mean   :21567  
+##  Firefighter                 : 424   3rd Qu.: 74658   3rd Qu.:40316  
+##  Custodian                   : 401   Max.   :109713   Max.   :66127  
+##  (Other)                     :1400                                   
+##     OtherPay        Benefits        TotalPay      TotalPayBenefits
+##  Min.   :    7   Min.   :    7   Min.   :     0   Min.   :     0  
+##  1st Qu.:14924   1st Qu.:22134   1st Qu.: 14859   1st Qu.: 16835  
+##  Median :37138   Median :59250   Median : 64044   Median : 88554  
+##  Mean   :37888   Mean   :51692   Mean   : 69099   Mean   : 90208  
+##  3rd Qu.:59660   3rd Qu.:78564   3rd Qu.:114865   3rd Qu.:148326  
+##  Max.   :84216   Max.   :98639   Max.   :287480   Max.   :325718  
+##                                                                   
+##       Year      Status   
+##  Min.   :2014     :   0  
+##  1st Qu.:2014   FT:2378  
+##  Median :2014   PT:2904  
+##  Mean   :2014            
+##  3rd Qu.:2014            
+##  Max.   :2014            
+## </code></pre>
 </div>
-<div id="retrieve-dataset" class="section level3">
-<h3>Retrieve dataset</h3>
+<div id="retrieve-dataset" class="section level4">
+<h4>Retrieve dataset</h4>
 <pre class="r"><code>write.table(datafinal,&quot;salariesclean.txt&quot;, quote= FALSE, sep =&quot;\t&quot;, row.names=FALSE)</code></pre>
 <p>Now this is the dataset which will be uploaded to SPAD in order to start the analysis.</p>
+</div>
+</div>
+</div>
+<div id="discriminant-analysis" class="section level2">
+<h2>Discriminant Analysis</h2>
+<div id="principal-component-analysis" class="section level3">
+<h3>Principal Component Analysis</h3>
+</div>
+<div id="componen-analysis" class="section level3">
+<h3>Componen Analysis</h3>
+</div>
+<div id="factorial-discriminant-analysis" class="section level3">
+<h3>Factorial Discriminant Analysis</h3>
 </div>
 </div>
 
