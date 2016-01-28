@@ -159,7 +159,9 @@ Hereby is the [Table of Contributions](https://github.com/Saulabrm/DMKM/blob/mas
 ##Correspondence Analysis  
 **Is there a link between Job Title and the working Status (Full-Time, Part-Time)?**
 
-Variables selected for CA are `JobTitle` and `Status`. All the variation in our data is well captured by the first principle component since one of our variables has two modalities. For the variable `JobTitle` Nurse, Public Service Aide and Fire Fighter have high contribution on the first factorial plane compared to other modalities.   There exist a strong link between Full time jobs and Deputy Sheriff, Fire Fighter and Police Officer. In contrast there is also a strong link between Part time jobs and Public Service Aide and Nurse.
+In order to pursue a Correspondence Analysis (CA), the first step is to revise wether it exists dependence between the two categorical variables. The variables selected for the CA are `JobTitle` and `Status`. A [Cross Table](https://github.com/Saulabrm/DMKM/blob/master/Multidimensional%20Data%20Analysis/01Salaries/SPAD/CA_CrossTable.xlsx) was built and its Chi-square value is equal to 1969 and P-value < .001. These previous numbers confirm a strong dependence between the variables `Job Title` and `Status`, hence a it is possible to do a Correspondence Analysis in order to answer the question.
+
+All the variation in our data is well captured by the first principle component since one of our variables has two modalities. For the variable `JobTitle` Nurse, Public Service Aide and Fire Fighter have high contribution on the first factorial plane compared to other modalities.   There exist a strong link between Full time jobs and Deputy Sheriff, Fire Fighter and Police Officer. In contrast there is also a strong link between Part time jobs and Public Service Aide and Nurse.
 
 
 ![alt tag](/Users/saulgarcia/Desktop/Github/DMKM/Multidimensional Data Analysis/01Salaries/SPAD/02CA.png)
