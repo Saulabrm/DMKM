@@ -15,6 +15,7 @@ zeros = rep(0,10)
 nat = seq(1:20)
 nat[5:20]
 
+#Exercise 3.
 #Read an HTML
 install.packages("XML")
 library(XML)
@@ -84,3 +85,7 @@ vectorize = function(list, index, dictionary) {
   d = unlist(strsplit(list[index], " "))
   sapply(d, function(x) match(x,dictionary), USE.NAMES = FALSE)
 }
+
+
+
+
